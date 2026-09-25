@@ -4,7 +4,7 @@
 EAPI=9
 DESCRIPTION="Zen browser custom ebuild"
 HOMEPAGE="https://zen-browser.app/"
-SRC_URI="https://github.com/zen-browser/desktop/releases/download/$PVR/zen.source.tar.zst"
+SRC_URI="https://github.com/zen-browser/desktop/archive/refs/heads/dev.zip"
 LICENSE="MPL-2.0"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~m68k ~mips ~ppc ~ppc64 ~riscv ~s390 ~sparc ~x86"
@@ -26,8 +26,13 @@ BDEPEND="
         >=dev-lang/rust-1.95.0
         app-arch/zstd
         "
-S=$WORKDIR       
+S=$WORKDIR/desktop-dev
 src_unpack() {
-        tar -xf  $DISTDIR/zen.source.tar.zst 
+	unzip  $DISTDIR/dev.zip
 }
-
+src_compile() {
+        npm i
+	npm run init
+        python3 ./scripts/update_en_US_packs.py
+        npm run build
+}
