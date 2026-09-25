@@ -11,21 +11,23 @@ KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~loong ~m68k ~mips ~ppc ~ppc64 ~
 #source: https://github.com/zen-browser/desktop/blob/dev/requirements.txt
 RDEPEND="
 	>=dev-python/click-8.1.8
-	>=dev-python/mypy-extensions-1.0.0
-	>=dev-python/packaging-24.2
-	>=dev-python/pathspec-1.1.1
-	>=dev-python/platformdirs-4.3.6
-	>=dev-python/pycodestyle-2.12.1
-	>=dev-python/requests-2.34.2
-	"
+        >=dev-python/mypy-extensions-1.0.0
+        >=dev-python/packaging-24.2
+        >=dev-python/pathspec-1.1.1
+        >=dev-python/platformdirs-4.3.6
+        >=dev-python/pycodestyle-2.12.1
+        >=dev-python/requests-2.34.2
+        "
 DEPEND="${RDEPEND}"
 
 BDEPEND="
 	>=net-libs/nodejs-22
-	>=dev-lang/python-3.11
-	>=dev-lang/rust-1.95.0
-	app-arch/zstd
-	"
+        >=dev-lang/python-3.11
+        >=dev-lang/rust-1.95.0
+        app-arch/zstd
+        "
+S=$WORKDIR       
 src_unpack() {
-	tar -xf  $DISTDIR/zen.source.tar.zst
+        tar -xf  $DISTDIR/zen.source.tar.zst 
 }
+
