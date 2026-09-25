@@ -24,4 +24,8 @@ BDEPEND="
 	>=net-libs/nodejs-22
 	>=dev-lang/python-3.11
 	>=dev-lang/rust-1.95.0
+	app-arch/zstd
 	"
+src_unpack() {
+	tar -xf  $DISTDIR/zen.source.tar.zst
+}
