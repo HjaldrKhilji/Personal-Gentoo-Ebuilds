@@ -41,6 +41,7 @@ src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
 src_compile() {
-	./mach bootstrap
+	cd $S
 	./mach build
+	echo "ac_add_options --with-ccache=sccache">mozconfig
 }
