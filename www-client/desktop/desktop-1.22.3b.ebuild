@@ -19,27 +19,25 @@ RDEPEND="
         >=dev-python/requests-2.34.2
         "
 DEPEND="${RDEPEND}"
-BDEPEND="
-	>=net-libs/nodejs-22
+BDEPEND=">=net-libs/nodejs-22
         >=dev-lang/python-3.11
         >=dev-lang/rust-1.95.0
-        app-arch/zstd
-	$(# Firefox builds are made internally with Clang/llvm. You cannot have Rust without LLVM, hence the following
+        app-arch/zstd"
+	# Firefox builds are made internally with Clang/llvm. You cannot have Rust without LLVM, hence the following
+	BDEPEND+="
 	llvm-runtimes/clang-runtime
-	llvm-runtimes/compiler-rt-sanitizers
-	$(#found as dependencies in /python/mozboot/mozboot specifically in the gentoo.py and linux_common.py files
+	llvm-runtimes/compiler-rt-sanitizers"
+	#found as dependencies in /python/mozboot/mozboot specifically in the gentoo.py and linux_common.py files
+	BDEPEND+="
 	app-shells/bash
 	sys-apps/findutils
 	app-arch/gzip
 	dev-build/make
 	dev-lang/perl
 	app-arch/tar
-	app-arch/unzip
-        "
+	app-arch/unzip"
 if [[ USE =~ .*ccache.* ]]; then
-	BDEPEND="${BDEPEND}
-		dev-util/sccache
-	"
+	BDEPEND=$BDEPEND dev-util/sccache
 fi
 S=$WORKDIR
 src_unpack() {
