@@ -24,6 +24,7 @@ BDEPEND="
         >=dev-lang/python-3.11
         >=dev-lang/rust-1.95.0
         app-arch/zstd
+	$(# Firefox builds are made internally with Clang/llvm. You cannot have Rust without LLVM, hence the following
 	llvm-runtimes/clang-runtime
 	llvm-runtimes/compiler-rt-sanitizers
 	$(#found as dependencies in /python/mozboot/mozboot specifically in the gentoo.py and linux_common.py files
@@ -38,7 +39,8 @@ BDEPEND="
 if [[ USE =~ .*ccache.* ]]; then
 	BDEPEND="${BDEPEND}
 		dev-util/sccache
-fi	"
+	"
+fi
 S=$WORKDIR
 src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
