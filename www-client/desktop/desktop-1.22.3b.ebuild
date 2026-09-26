@@ -19,7 +19,6 @@ RDEPEND="
         >=dev-python/requests-2.34.2
         "
 DEPEND="${RDEPEND}"
-
 BDEPEND="
 	>=net-libs/nodejs-22
         >=dev-lang/python-3.11
@@ -27,7 +26,7 @@ BDEPEND="
         app-arch/zstd
 	llvm-runtimes/clang-runtime
 	llvm-runtimes/compiler-rt-sanitizers
-	dev-util/sccache
+	$(#found as dependencies in /python/mozboot/mozboot specifically in the gentoo.py and linux_common.py files
 	app-shells/bash
 	sys-apps/findutils
 	app-arch/gzip
@@ -36,13 +35,19 @@ BDEPEND="
 	app-arch/tar
 	app-arch/unzip
         "
+if [[ USE =~ .*ccache.* ]]; then
+	BDEPEND="${BDEPEND}
+		dev-util/sccache
+fi	"
 S=$WORKDIR
 src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
 src_configure() {
    cd $S 
+   if [[ USE =~ .*ccache.* ]]; then
    echo 'ac_add_options --with-ccache=sccache' >> mozconfig
+   fi
 }
 src_compile() {
 	./mach build
