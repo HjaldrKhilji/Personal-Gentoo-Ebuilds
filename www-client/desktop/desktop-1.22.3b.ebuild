@@ -40,8 +40,10 @@ S=$WORKDIR
 src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
+src_configure() {
+   cd $S 
+   echo 'ac_add_options --with-ccache=sccache' >> mozconfig
+}
 src_compile() {
-	cd $S
 	./mach build
-	echo "ac_add_options --with-ccache=sccache">mozconfig
 }
