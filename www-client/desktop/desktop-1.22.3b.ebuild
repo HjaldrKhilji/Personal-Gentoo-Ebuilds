@@ -21,8 +21,7 @@ RDEPEND="
 DEPEND="${RDEPEND}"
 BDEPEND=">=net-libs/nodejs-22
         >=dev-lang/python-3.11
-        >=dev-lang/rust-1.95.0
-        app-arch/zstd"
+        >=dev-lang/rust-1.95.0"
 	# Firefox builds are made internally with Clang/llvm. You cannot have Rust without LLVM, hence the following
 	BDEPEND+="
 	llvm-runtimes/clang-runtime
@@ -36,6 +35,13 @@ BDEPEND=">=net-libs/nodejs-22
 	dev-lang/perl
 	app-arch/tar
 	app-arch/unzip"
+BDEPEND+="
+	 >=dev-python/orjson-3.10
+	 >=dev-python/psutil-5.4.2
+	 >=dev-python/zstandard-0.11.1<=0.25.0
+	 =dev-python/pyyaml-6.0.3
+	 
+"
 if [[ USE =~ .*ccache.* ]]; then
 	BDEPEND=$BDEPEND dev-util/sccache
 fi
@@ -44,11 +50,27 @@ src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
 src_configure() {
-   cd $S 
-   if [[ USE =~ .*ccache.* ]]; then
-   echo 'ac_add_options --with-ccache=sccache' >> mozconfig
-   fi
+	cd $S
+	mkdir python_activate_path
+	python -m venv python_activate_path
+	. python_activate_path
+	pip install rtoml
+	pip install taskcluster-taskgraph
+	if [[ USE =~ .*ccache.* ]]; then
+		echo 'ac_add_options --with-ccache=sccache' >> mozconfig
+	fi
+	if [[ USE =~ .*artifact.* ]]; then
+		echo 'ac_add_options --enable-artifact-builds' >> mozconfig
+		if [[ USE =~ .*cacche.* ]]; then
+			die "You cant specify the artifact USE flag while ccache is specific as well"
+		fi
+	fi
+	#agentic support cant be added for now, sorry for the inconvinience there
 }
 src_compile() {
 	./mach build
 }
+pkg_postinst() {
+	deactivate $S/python_activate_path
+}
+muneem@lo
