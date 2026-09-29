@@ -22,7 +22,7 @@ DEPEND="${RDEPEND}"
 BDEPEND=">=net-libs/nodejs-22
         >=dev-lang/python-3.11
         >=dev-lang/rust-1.95.0"
-	# Firefox builds are made internally with Clang/llvm. You cannot have Rust without LLVM, hence the following
+	# Firefox builds are made internally with Clang/llvm because You cannot have Rust without LLVM, hence the following
 	BDEPEND+="
 	llvm-runtimes/clang-runtime
 	llvm-runtimes/compiler-rt-sanitizers"
@@ -38,7 +38,8 @@ BDEPEND=">=net-libs/nodejs-22
 BDEPEND+="
 	 >=dev-python/orjson-3.10
 	 >=dev-python/psutil-5.4.2
-	 >=dev-python/zstandard-0.11.1<=0.25.0
+	 >=dev-python/zstandard-0.11.1
+	 <=dev-python/zstandard-0.25.0
 	 =dev-python/pyyaml-6.0.3
 	 
 "
@@ -51,6 +52,7 @@ src_unpack() {
 }
 src_configure() {
 	cd $S
+	./mach configure #to produce /obj-x86_64-pc-linux-gnu/mozinfo.json, like it isnt worth doing it myself if one can just automate it
 	mkdir python_activate_path
 	python -m venv python_activate_path
 	. python_activate_path
@@ -73,4 +75,3 @@ src_compile() {
 pkg_postinst() {
 	deactivate $S/python_activate_path
 }
-muneem@lo
