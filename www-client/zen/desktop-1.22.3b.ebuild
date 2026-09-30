@@ -51,13 +51,14 @@ src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
 src_configure() {
-	cd $S
-	./mach configure #to produce /obj-x86_64-pc-linux-gnu/mozinfo.json, like it isnt worth doing it myself if one can just automate it
+	python submit_json_config.py "/HDD_partitions/heavy_working_files/zen-browser"
+	cd $S/python
 	mkdir python_activate_path
 	python -m venv python_activate_path
-	. python_activate_path
+	. python_activate_path/bin/activate
 	pip install rtoml
 	pip install taskcluster-taskgraph
+	cd $S
 	if [[ USE =~ .*ccache.* ]]; then
 		echo 'ac_add_options --with-ccache=sccache' >> mozconfig
 	fi
