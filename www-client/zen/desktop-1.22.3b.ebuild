@@ -51,7 +51,7 @@ src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
 src_configure() {
-	python submit_json_config.py "/HDD_partitions/heavy_working_files/zen-browser"
+	python "$FILESDIR/submit_json_config.py" $S
 	cd $S/python
 	mkdir python_activate_path
 	python -m venv python_activate_path
