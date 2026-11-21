@@ -22,12 +22,8 @@ DEPEND="${RDEPEND}"
 BDEPEND=">=net-libs/nodejs-22
         >=dev-lang/python-3.11
         >=dev-lang/rust-1.95.0"
-	# Firefox builds are made internally with Clang/llvm because You cannot have Rust without LLVM, hence the following
-	BDEPEND+="
-	llvm-runtimes/clang-runtime
-	llvm-runtimes/compiler-rt-sanitizers"
 	#found as dependencies in /python/mozboot/mozboot specifically in the gentoo.py and linux_common.py files
-	BDEPEND+="
+BDEPEND+="
 	app-shells/bash
 	sys-apps/findutils
 	app-arch/gzip
@@ -35,44 +31,16 @@ BDEPEND=">=net-libs/nodejs-22
 	dev-lang/perl
 	app-arch/tar
 	app-arch/unzip"
-BDEPEND+="
-	 >=dev-python/orjson-3.10
-	 >=dev-python/psutil-5.4.2
-	 >=dev-python/zstandard-0.11.1
-	 <=dev-python/zstandard-0.25.0
-	 =dev-python/pyyaml-6.0.3
-	 
-"
-if [[ USE =~ .*ccache.* ]]; then
-	BDEPEND=$BDEPEND dev-util/sccache
-fi
 S=$WORKDIR
 src_unpack() {
         tar -xf  $DISTDIR/zen.source.tar.zst
 }
 src_configure() {
-	python "$FILESDIR/submit_json_config.py" $S
-	cd $S/python
-	mkdir python_activate_path
-	python -m venv python_activate_path
-	. python_activate_path/bin/activate
-	pip install rtoml
-	pip install taskcluster-taskgraph
-	cd $S
-	if [[ USE =~ .*ccache.* ]]; then
-		echo 'ac_add_options --with-ccache=sccache' >> mozconfig
-	fi
-	if [[ USE =~ .*artifact.* ]]; then
-		echo 'ac_add_options --enable-artifact-builds' >> mozconfig
-		if [[ USE =~ .*cacche.* ]]; then
-			die "You cant specify the artifact USE flag while ccache is specific as well"
-		fi
-	fi
-	#agentic support cant be added for now, sorry for the inconvinience there
+	sed -i '/subprocess.check_call(command, stdin=sys.stdin)/d' 'python/mozboot/mozboot/base.py' 
+	sed -i '/print("Executing as root:", subprocess.list2cmdline(command))/d' 'python/mozboot/mozboot/base.py' 
+
 }
 src_compile() {
+	./mach  --no-interactive bootstrap --application-choice browser
 	./mach build
-}
-pkg_postinst() {
-	deactivate $S/python_activate_path
 }
