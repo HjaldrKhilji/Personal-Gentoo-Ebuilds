@@ -37,6 +37,7 @@ src_unpack() {
 }
 src_configure() {
 	sed -i '/subprocess.check_call(command, stdin=sys.stdin)/d' 'python/mozboot/mozboot/base.py' 
+	sed -i '/subprocess.check_call([str(rustup), "component", "add", "rustfmt"])/d' 'python/mozboot/mozboot/base.py'
 	sed -i '/print("Executing as root:", subprocess.list2cmdline(command))/d' 'python/mozboot/mozboot/base.py' 
 
 }
